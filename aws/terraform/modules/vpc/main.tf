@@ -1,5 +1,5 @@
 resource "aws_vpc" "main" {
-  cidr_block           = var.vpc_cidr
+  cidr_block           = local.vpc_cidr
   enable_dns_support   = true
   enable_dns_hostnames = true
 
@@ -18,7 +18,7 @@ resource "aws_internet_gateway" "igw" {
 
 resource "aws_subnet" "public_a" {
   vpc_id                  = aws_vpc.main.id
-  cidr_block              = var.public_subnet_a_cidr
+  cidr_block              = local.public_subnet_a_cidr
   availability_zone       = local.az_a
   map_public_ip_on_launch = true
 
@@ -29,7 +29,7 @@ resource "aws_subnet" "public_a" {
 
 resource "aws_subnet" "public_c" {
   vpc_id                  = aws_vpc.main.id
-  cidr_block              = var.public_subnet_c_cidr
+  cidr_block              = local.public_subnet_c_cidr
   availability_zone       = local.az_c
   map_public_ip_on_launch = true
 
@@ -40,7 +40,7 @@ resource "aws_subnet" "public_c" {
 
 resource "aws_subnet" "private_a" {
   vpc_id            = aws_vpc.main.id
-  cidr_block        = var.private_subnet_a_cidr
+  cidr_block        = local.private_subnet_a_cidr
   availability_zone = local.az_a
 
   tags = {
@@ -50,13 +50,47 @@ resource "aws_subnet" "private_a" {
 
 resource "aws_subnet" "private_c" {
   vpc_id            = aws_vpc.main.id
-  cidr_block        = var.private_subnet_c_cidr
+  cidr_block        = local.private_subnet_c_cidr
   availability_zone = local.az_c
 
   tags = {
     Name = "private-snet-c"
   }
 }
+
+#db가 위치할 subnet
+resource "aws_subnet" "private_db_a" {
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = local.private_subnet_db_a_cidr
+  availability_zone = local.az_a
+
+  tags = {
+    Name = "private-db-snet-a"
+  }
+}
+
+resource "aws_subnet" "private_db_c" {
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = local.private_subnet_db_c_cidr
+  availability_zone = local.az_c
+
+  tags = {
+    Name = "private-db-snet-c"
+  }
+}
+
+resource "aws_db_subnet_group" "postgres" {
+  name       = "postgres-subnet-group"
+  subnet_ids = [
+    aws_subnet.private_db_a.id, 
+    aws_subnet.private_db_c.id
+  ]
+  
+  tags = {
+    Name = "PostgresSubnetGroup"
+  }
+}
+
 
 # EIP for NAT
 resource "aws_eip" "nat_eip" {
@@ -115,5 +149,15 @@ resource "aws_route_table_association" "private_a" {
 
 resource "aws_route_table_association" "private_c" {
   subnet_id      = aws_subnet.private_c.id
+  route_table_id = aws_route_table.private.id
+}
+
+resource "aws_route_table_association" "private_db_a" {
+  subnet_id      = aws_subnet.private_db_a.id
+  route_table_id = aws_route_table.private.id
+}
+
+resource "aws_route_table_association" "private_db_c" {
+  subnet_id      = aws_subnet.private_db_c.id
   route_table_id = aws_route_table.private.id
 }

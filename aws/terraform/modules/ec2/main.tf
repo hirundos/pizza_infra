@@ -1,3 +1,5 @@
+
+
 #bastion server
 resource "aws_instance" "bastion" {
   ami                         = local.amazon_img

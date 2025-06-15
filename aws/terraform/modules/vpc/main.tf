@@ -80,12 +80,12 @@ resource "aws_subnet" "private_db_c" {
 }
 
 resource "aws_db_subnet_group" "postgres" {
-  name       = "postgres-subnet-group"
+  name = "postgres-subnet-group"
   subnet_ids = [
-    aws_subnet.private_db_a.id, 
+    aws_subnet.private_db_a.id,
     aws_subnet.private_db_c.id
   ]
-  
+
   tags = {
     Name = "PostgresSubnetGroup"
   }
@@ -94,8 +94,8 @@ resource "aws_db_subnet_group" "postgres" {
 
 # EIP for NAT
 resource "aws_eip" "nat_eip" {
-  vpc  = true
-  tags = { Name = "pz-nat-eip" }
+  domain = "vpc"
+  tags   = { Name = "pz-nat-eip" }
 }
 
 # NAT Gateway (Public A에 배치)

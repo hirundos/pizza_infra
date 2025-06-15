@@ -8,4 +8,5 @@
 
 ## 진행 현황
 - [x] GCP GKE + NLB 배포 성공 / 2025-06-01
+- [x] AWS EKS Terraform으로 자동화 / 2025-06-06
 - [] AWS EKS + NLB 배포

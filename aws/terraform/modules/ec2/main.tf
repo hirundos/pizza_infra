@@ -1,5 +1,3 @@
-
-
 #bastion server
 resource "aws_instance" "bastion" {
   ami                         = local.amazon_img
@@ -19,7 +17,7 @@ resource "aws_instance" "mgnt" {
   ami                         = local.amazon_img
   instance_type               = "t2.micro"
   subnet_id                   = var.private_a_snet_id
-  vpc_security_group_ids      = [aws_security_group.mgnt-sg.id]
+  vpc_security_group_ids      = [aws_security_group.mgnt-sg.id, var.eks_module_sg_id]
   key_name                    = local.my_keypair
   associate_public_ip_address = false
 

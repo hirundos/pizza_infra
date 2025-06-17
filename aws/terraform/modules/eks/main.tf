@@ -25,9 +25,22 @@ module "eks" {
       desired_size   = 2
       instance_types = ["c6i.large"]
 
-      additional_security_group_ids=[var.ec2_db_sg_id]
+      vpc_security_group_ids=[
+          module.eks.node_security_group_id,var.ec2_db_sg_id
+        ]
     }
   }
+
+  cluster_addons = {
+    coredns = {
+      resolve_conflicts = "OVERWRITE"
+      most_recent       = true
+  }
+    kube-proxy = {
+      most_recent = true
+  }
+}
+
 
   tags = {
     Environment = "dev"

@@ -16,6 +16,7 @@ module "ec2" {
   vpc_id            = module.vpc.vpc_id
   public_a_snet_id  = module.vpc.public_subnet_ids[0]
   private_a_snet_id = module.vpc.private_subnet_ids[0]
+  eks_module_sg_id = module.eks.eks_sg_id
 }
 
 module "rds" {

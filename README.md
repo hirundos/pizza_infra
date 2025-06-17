@@ -1,4 +1,4 @@
-# Multi-cloud Kubernetes Infra Repo
+# AWS cloud Kubernetes Infra Repo
 
 이 저장소는 제가 개발한 애플리케이션을 aws에 배포해보면서 개선사항을 기록해나가는 저장소입니다.
 

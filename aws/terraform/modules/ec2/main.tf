@@ -23,6 +23,20 @@ resource "aws_instance" "mgnt" {
   key_name                    = local.my_keypair
   associate_public_ip_address = false
 
+  user_data = <<-EOF
+      #!/bin/bash
+      set -e
+      curl -o kubectl https://s3.us-west-2.amazonaws.com/amazon-eks/1.32.3/2025-04-17/bin/linux/amd64/kubectl
+      chmod +x kubectl
+      mkdir -p /home/ec2-user/bin
+      mv ./kubectl /home/ec2-user/bin/kubectl
+      
+      echo 'export PATH=/home/ec2-user/bin:$PATH' >> /home/ec2-user/.bash_profile
+      chown -R ec2-user:ec2-user /home/ec2-user/bin
+
+      export PATH=/home/ec2-user/bin:$PATH
+    EOF
+
   root_block_device {
       volume_size = 30  
     }

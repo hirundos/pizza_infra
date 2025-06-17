@@ -3,7 +3,7 @@ resource "aws_db_instance" "postgres_from_snapshot" {
   instance_class         = "db.t3.micro"
   engine                 = "postgres"
   engine_version         = "17"
-  snapshot_identifier    = "pg-db-snapshot"
+  snapshot_identifier    = "pz-snap"
   db_subnet_group_name   = var.db_snet_grp
   vpc_security_group_ids = [var.db_security_group_id]
   publicly_accessible    = false
@@ -11,6 +11,9 @@ resource "aws_db_instance" "postgres_from_snapshot" {
   storage_encrypted      = true
   password = "pizzastore"
 
+lifecycle {
+  ignore_changes = [snapshot_identifier, password]
+}
 
   tags = {
     Name = "pizza-db"

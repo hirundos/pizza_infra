@@ -2,7 +2,7 @@ module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "~> 20.31"
 
-  cluster_name = "eks-auto-mode"
+  cluster_name = "pizza-eks"
   cluster_version = "1.31"
 
   vpc_id     = var.vpc_id
@@ -21,52 +21,17 @@ module "eks" {
 
   eks_managed_node_groups = {
     with_lt = {
-      launch_template = {
-        id      = aws_launch_template.eks_nodes.id
-        version = "$Latest"
-      }
+      create_launch_template = true
       desired_size   = 2
       instance_types = ["c6i.large"]
-    }
-  }
-/*
-  eks_managed_node_groups = {
-    default = {
-      desired_size   = 2
-      max_size       = 3
-      min_size       = 1
-      instance_types = ["c6i.large"]
-      capacity_type  = "ON_DEMAND"
 
-      # Optional: node group IAM role override
-      # iam_role_arn = ...
+      additional_security_group_ids=[var.ec2_db_sg_id]
     }
   }
-*/
+
   tags = {
     Environment = "dev"
     Terraform   = "true"
-  }
-
-}
-
-resource "aws_launch_template" "eks_nodes" {
-  name_prefix = "eks-nodes-"
-  image_id      = data.aws_ami.amazon_eks.id
-  instance_type = "c6i.large"
-
-  network_interfaces {
-    associate_public_ip_address = false
-    security_groups             = [var.eks_node_sg_id, var.ec2_db_sg_id]
-  }
-
-  block_device_mappings {
-    device_name = "/dev/xvda"
-
-    ebs {
-      volume_size = 50
-      volume_type = "gp3"
-    }
   }
 
 }
@@ -93,6 +58,7 @@ module "vpc_cni_irsa" {
 resource "aws_eks_addon" "vpc_cni" {
   cluster_name = module.eks.cluster_name
   addon_name   = "vpc-cni"
+  addon_version = "v1.19.5-eksbuild.3"
   resolve_conflicts = "OVERWRITE"
 
   service_account_role_arn = module.vpc_cni_irsa.iam_role_arn

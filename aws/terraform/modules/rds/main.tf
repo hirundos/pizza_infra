@@ -8,11 +8,11 @@ resource "aws_db_instance" "postgres_from_snapshot" {
   vpc_security_group_ids = [var.db_security_group_id]
   publicly_accessible    = false
   skip_final_snapshot    = true
-  storage_encrypted      = true
+  storage_encrypted      = false
   password = "pizzastore"
 
 lifecycle {
-  ignore_changes = [snapshot_identifier, password]
+  ignore_changes = [snapshot_identifier, password, engine_version]
 }
 
   tags = {

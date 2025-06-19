@@ -36,4 +36,43 @@ module "eks" {
   eks_shared_sg_id   = module.ec2.eks_share_sg_id
   nat_gw = module.vpc.nat-gw
   vpc_id = module.vpc.vpc_id
+
+
 }
+
+data "aws_eks_cluster" "eks" {
+  name = module.eks.cluster_name
+}
+
+data "aws_eks_cluster_auth" "eks" {
+  name = module.eks.cluster_name
+}
+
+
+provider "kubernetes" {
+  host                   = data.aws_eks_cluster.eks.endpoint
+  cluster_ca_certificate = base64decode(data.aws_eks_cluster.eks.certificate_authority[0].data)
+  token                  = data.aws_eks_cluster_auth.eks.token
+  alias                  = "eks"
+}
+
+provider "helm" {
+  alias    = "eks"
+
+  kubernetes = {
+    host                   = data.aws_eks_cluster.eks.endpoint
+    cluster_ca_certificate = base64decode(data.aws_eks_cluster.eks.certificate_authority[0].data)
+    token                  = data.aws_eks_cluster_auth.eks.token
+  }
+}
+
+module "my_helm" {
+  source = "./modules/helm"
+  vpc_id = module.vpc.vpc_id
+
+    providers = {
+    kubernetes = kubernetes.eks
+    helm       = helm.eks
+  }
+}
+

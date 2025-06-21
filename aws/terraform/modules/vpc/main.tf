@@ -24,6 +24,8 @@ resource "aws_subnet" "public_a" {
 
   tags = {
     Name = "public-snet-a"
+    "kubernetes.io/role/elb" = "1"
+    "kubernetes.io/cluster/pizza-eks" = "shared"
   }
 }
 
@@ -35,6 +37,8 @@ resource "aws_subnet" "public_c" {
 
   tags = {
     Name = "public-snet-c"
+    "kubernetes.io/role/elb" = "1"
+    "kubernetes.io/cluster/pizza-eks" = "shared"
   }
 }
 

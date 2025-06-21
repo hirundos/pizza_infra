@@ -36,8 +36,6 @@ module "eks" {
   eks_shared_sg_id   = module.ec2.eks_share_sg_id
   nat_gw = module.vpc.nat-gw
   vpc_id = module.vpc.vpc_id
-
-
 }
 
 data "aws_eks_cluster" "eks" {

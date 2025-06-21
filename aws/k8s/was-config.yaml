@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: was-config
+data:
+  DB_PORT: "5432"
+  DB_HOST: ""
+  DB_USER: "postgres"
+  DB_DATABASE: "pizza"
+  DB_PASSWORD: ""
+  SECRET_KEY: ""

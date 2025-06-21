@@ -24,6 +24,9 @@ spec:
           limits:
             cpu: "500m"
             memory: "512Mi" 
+        envFrom:  
+        - configMapRef:
+          name: was-config
 ---
 apiVersion: v1
 kind: Service

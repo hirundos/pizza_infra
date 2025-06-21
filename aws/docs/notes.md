@@ -22,7 +22,7 @@
 
 ### 2. helm 순환 참조 이슈
 
-- 문제: helm 순환 참조 이슈
+- 문제: Helm으로 ALB Controller 설치 중 `kubernetes_service_account` 리소스 관련 에러 발생
 - 원인: eks 모듈 내에 helm 관련 코드를 넣어 발생
 - 해결: helm 관련 모듈 분리 및 root main에서의 순서 조정으로 해결
 

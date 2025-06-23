@@ -66,8 +66,8 @@ provider "helm" {
   }
 }
 
-module "my_helm" {
-  source = "./modules/helm"
+module "my_k8s" {
+  source = "./modules/k8s"
   vpc_id = module.vpc.vpc_id
 
     providers = {
@@ -76,5 +76,5 @@ module "my_helm" {
   }
 
   alb_iam_arn = module.eks.alb_iam_arn
+  db_endpoint = module.rds.db_endpoint
 }
-

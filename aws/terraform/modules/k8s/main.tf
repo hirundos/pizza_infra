@@ -27,3 +27,19 @@ resource "helm_release" "alb_controller" {
   depends_on = [kubernetes_service_account.alb_controller]
 }
 
+resource "helm_release" "prometheus_stack" {
+  name       = "prometheus-stack"
+  namespace  = "monitoring"
+  create_namespace = true
+
+  repository = "https://prometheus-community.github.io/helm-charts"
+  chart      = "kube-prometheus-stack"
+  version    = "75.4.0" 
+
+  values = [<<-EOT
+  grafana:
+    service:
+      type: LoadBalancer
+  EOT
+  ]
+}

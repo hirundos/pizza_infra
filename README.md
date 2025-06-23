@@ -8,4 +8,10 @@
 
 ## 진행 현황
 - [x] AWS EKS Terraform으로 자동화 / 2025-06-16
-- [] AWS EKS + NLB 배포
+- [x] AWS EKS + ALB 배포 / 2025-06-20
+- [] k8s 배포를 terraform으로 자동화
+- [] was를 도메인 기준으로 해서 3개로 분리
+
+## 변경 사항
+- aws와 gcp 배포 과정을 같은 git repo에 기록하다가 분리하였습니다.
+- k8s나 dockerfile도 같이 담고 있는데 이는 과정에 대한 기록으로 terraform과 cicd 사용해서 이들도 코드로 자동화되도록 바꿀 예정입니다.
